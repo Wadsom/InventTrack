@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,10 +20,14 @@ public class SaleService {
     @Autowired
     private SaleRepository SaleRepo;
 
+    @Autowired
+    private SellerRepository sellerRepo;
 
-
-    public Page<SaleDTO> listFindAll(Pageable pageable){
+    @Transactional(readOnly = true)
+    public Page<SaleDTO> listFindAll(Pageable pageable) {
+        //Salva na memoria fazendo o Jpa usar esse Cache para não ficar fazendo várias pesquisas no banco
+        sellerRepo.findAll();
         Page<SaleEntity> result = SaleRepo.findAll(pageable);
-        return result.map(x-> new SaleDTO(x));
+        return result.map(x -> new SaleDTO(x));
     }
 }
