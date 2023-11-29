@@ -1,9 +1,10 @@
 package com.WpCorp.InventTrack.Service;
 
 import com.WpCorp.InventTrack.DTO.SaleDTO;
+import com.WpCorp.InventTrack.DTO.SaleSucessBySellerDTO;
+import com.WpCorp.InventTrack.DTO.SaleSumDTO;
 import com.WpCorp.InventTrack.DTO.SellerDTO;
 import com.WpCorp.InventTrack.Entity.SaleEntity;
-import com.WpCorp.InventTrack.Entity.SellerEntity;
 import com.WpCorp.InventTrack.Repository.SaleRepository;
 import com.WpCorp.InventTrack.Repository.SellerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,5 +30,14 @@ public class SaleService {
         sellerRepo.findAll();
         Page<SaleEntity> result = SaleRepo.findAll(pageable);
         return result.map(x -> new SaleDTO(x));
+    }
+
+    @Transactional(readOnly = true)
+    public List<SaleSumDTO> amountBySeller(){
+        return SaleRepo.amountGroupedBySeller();
+    }
+    @Transactional(readOnly = true)
+    public List<SaleSucessBySellerDTO> saleSucessBySellerDTOS(){
+        return SaleRepo.visitedBySeller();
     }
 }
